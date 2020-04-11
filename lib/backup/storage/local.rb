@@ -46,13 +46,15 @@ module Backup
         if self == model.storages.last
           true
         else
-          Logger.warn Error.new(<<-EOS)
-            Local File Copy Warning!
-            The final backup file(s) for '#{model.label}' (#{model.trigger})
-            will be *copied* to '#{remote_path}'
-            To avoid this, when using more than one Storage, the 'Local' Storage
-            should be added *last* so the files may be *moved* to their destination.
-          EOS
+          unless model.storages.last.is_a? Local
+            Logger.warn Error.new(<<-EOS)
+              Local File Copy Warning!
+              The final backup file(s) for '#{model.label}' (#{model.trigger})
+              will be *copied* to '#{remote_path}'
+              To avoid this, when using more than one Storage, the 'Local' Storage
+              should be added *last* so the files may be *moved* to their destination.
+            EOS
+          end
           false
         end
       end

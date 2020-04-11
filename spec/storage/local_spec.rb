@@ -71,36 +71,57 @@ module Backup
       end
 
       context "when the storage is not the last for the model" do
-        before do
-          model.storages << storage
-          model.storages << Storage::Local.new(model)
+        before { model.storages << storage }
+
+        context "and last storage is local" do
+          before { model.storages << Storage::Local.new(model) }
+
+          it "copies the package files to their destination" do
+            expect(FileUtils).to receive(:mkdir_p).ordered.with(remote_path)
+  
+            src = File.join(Config.tmp_path, "test_trigger.tar-aa")
+            dest = File.join(remote_path, "test_trigger.tar-aa")
+            expect(Logger).to receive(:info).ordered.with("Storing '#{dest}'...")
+            expect(FileUtils).to receive(:cp).ordered.with(src, dest)
+  
+            src = File.join(Config.tmp_path, "test_trigger.tar-ab")
+            dest = File.join(remote_path, "test_trigger.tar-ab")
+            expect(Logger).to receive(:info).ordered.with("Storing '#{dest}'...")
+            expect(FileUtils).to receive(:cp).ordered.with(src, dest)
+  
+            storage.send(:transfer!)
+          end
         end
 
-        it "logs a warning and copies the package files to their destination" do
-          expect(FileUtils).to receive(:mkdir_p).ordered.with(remote_path)
+        context "and last storage is not local" do
+          before { model.storages << Storage::FTP.new(model) }
 
-          expect(Logger).to receive(:warn).ordered do |err|
-            expect(err).to be_an_instance_of Storage::Local::Error
-            expect(err.message).to eq <<-EOS.gsub(/^ +/, "  ").strip
-            Storage::Local::Error: Local File Copy Warning!
-              The final backup file(s) for 'test label' (test_trigger)
-              will be *copied* to '#{remote_path}'
-              To avoid this, when using more than one Storage, the 'Local' Storage
-              should be added *last* so the files may be *moved* to their destination.
-          EOS
+          it "copies the package files to their destination" do
+            expect(FileUtils).to receive(:mkdir_p).ordered.with(remote_path)
+  
+            expect(Logger).to receive(:warn).ordered do |err|
+              expect(err).to be_an_instance_of Storage::Local::Error
+              expect(err.message).to eq <<-EOS.gsub(/^ +/, "  ").strip
+              Storage::Local::Error: Local File Copy Warning!
+                The final backup file(s) for 'test label' (test_trigger)
+                will be *copied* to '#{remote_path}'
+                To avoid this, when using more than one Storage, the 'Local' Storage
+                should be added *last* so the files may be *moved* to their destination.
+            EOS
+            end
+  
+            src = File.join(Config.tmp_path, "test_trigger.tar-aa")
+            dest = File.join(remote_path, "test_trigger.tar-aa")
+            expect(Logger).to receive(:info).ordered.with("Storing '#{dest}'...")
+            expect(FileUtils).to receive(:cp).ordered.with(src, dest)
+  
+            src = File.join(Config.tmp_path, "test_trigger.tar-ab")
+            dest = File.join(remote_path, "test_trigger.tar-ab")
+            expect(Logger).to receive(:info).ordered.with("Storing '#{dest}'...")
+            expect(FileUtils).to receive(:cp).ordered.with(src, dest)
+  
+            storage.send(:transfer!)
           end
-
-          src = File.join(Config.tmp_path, "test_trigger.tar-aa")
-          dest = File.join(remote_path, "test_trigger.tar-aa")
-          expect(Logger).to receive(:info).ordered.with("Storing '#{dest}'...")
-          expect(FileUtils).to receive(:cp).ordered.with(src, dest)
-
-          src = File.join(Config.tmp_path, "test_trigger.tar-ab")
-          dest = File.join(remote_path, "test_trigger.tar-ab")
-          expect(Logger).to receive(:info).ordered.with("Storing '#{dest}'...")
-          expect(FileUtils).to receive(:cp).ordered.with(src, dest)
-
-          storage.send(:transfer!)
         end
       end
     end # describe '#transfer!'
