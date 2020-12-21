@@ -10,8 +10,6 @@
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
   Exclude:
-    - 'lib/backup/cloud_io/cloud_files.rb'
-    - 'lib/backup/cloud_io/s3.rb'
     - 'lib/backup/config/helpers.rb'
     - 'lib/backup/encryptor/gpg.rb'
     - 'lib/backup/logger/logfile.rb'
