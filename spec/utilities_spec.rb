@@ -27,28 +27,15 @@ describe Backup::Utilities do
         bzip2   "/path/to/bzip2"
 
         # Database Utilities
-        mongo        "/path/to/mongo"
-        mongodump    "/path/to/mongodump"
-        mysqldump    "/path/to/mysqldump"
         pg_dump      "/path/to/pg_dump"
         pg_dumpall   "/path/to/pg_dumpall"
-        redis_cli    "/path/to/redis-cli"
-        riak_admin   "/path/to/riak-admin"
-        innobackupex "/path/to/innobackupex"
 
         # Encryptors
         gpg     "/path/to/gpg"
         openssl "/path/to/openssl"
 
-        # Syncer and Storage
-        rsync   "/path/to/rsync"
-        ssh     "/path/to/ssh"
-
         # Notifiers
         sendmail  "/path/to/sendmail"
-        exim      "/path/to/exim"
-        send_nsca "/path/to/send_nsca"
-        zabbix_sender "/path/to/zabbix_sender"
       end
     end
 

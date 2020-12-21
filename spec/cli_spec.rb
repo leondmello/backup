@@ -544,7 +544,7 @@ describe "Backup::CLI" do
         storages (local, scp)
         encryptor (gpg, openssl)
         compressor (bzip2, custom, gzip)
-        notifiers (command, http_post, mail)
+        notifiers (command, mail)
       EOS
 
       out, err = capture_io do

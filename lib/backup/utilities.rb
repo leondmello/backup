@@ -7,8 +7,7 @@ module Backup
       gzip bzip2
       pg_dump pg_dumpall
       gpg openssl
-      sendmail exim
-      send_nsca
+      sendmail
     ].freeze
 
     # @api private
