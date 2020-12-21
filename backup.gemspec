@@ -29,9 +29,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "thor", "~> 0.18", ">= 0.18.1"
   gem.add_dependency "open4", "1.3.0"
-  gem.add_dependency "excon", "~> 0.44"
   gem.add_dependency "net-scp", "1.2.1"
-
   gem.add_dependency "mail", "~> 2.6", ">= 2.6.6"
   gem.add_dependency "nokogiri", "~> 1.8", ">= 1.8.1"
 

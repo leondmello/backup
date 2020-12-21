@@ -12,12 +12,6 @@ require "open4"
 require "thor"
 require "shellwords"
 
-require "excon"
-# Include response.inspect in error messages.
-Excon.defaults[:debug_response] = true
-# Excon should not retry failed requests. We handle that.
-Excon.defaults[:middlewares].delete(Excon::Middleware::Idempotent)
-
 ##
 # The Backup Ruby Gem
 module Backup
